@@ -14,7 +14,7 @@ This project is based on the [custom Keycloak template](https://github.com/inven
 - `server`: provides a Keycloak installation for local development & testing
 - `themes`: provides samples for custom themes
 
-Please see the tutorial [building a custom Keycloak container image](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/) for the details of this project.
+Please see the tutorials [building a custom Keycloak container image](https://keycloak.ch/keycloak-tutorials/tutorial-custom-keycloak/) and [Configuring Passkey](https://keycloak.ch/keycloak-tutorials/tutorial-passkey/) for the details of this project.
 
 [Keycloak]: https://keycloak.org
 
