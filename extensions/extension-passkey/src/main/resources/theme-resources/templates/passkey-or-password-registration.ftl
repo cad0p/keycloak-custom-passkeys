@@ -23,23 +23,30 @@
     </#if>
     <script type="text/javascript" src="${url.resourcesCommonPath}/node_modules/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript">
-        // Check if WebAuthn is supported by this browser
+    
+        function setupPasskey() {
+            document.getElementById("setupType").value = "passkey";
+            document.getElementById("setupAuth").submit();
+        }
+
+        function setupPassword() {
+            document.getElementById("setupType").value = "password";
+            document.getElementById("setupAuth").submit();
+        }
+
+        // Check WebAuthn support
         // If not redirect to password setup
         if (!window.PublicKeyCredential) {
-            $("#setupType").val("password");
-            $("#setupAuth").submit();
+            document.getElementById("setupType").value = "password";
+            document.getElementById("setupAuth").submit();
         }
-        if (document.getElementById("kc-select-try-another-way-form") != null) {
-            document.getElementById("kc-select-try-another-way-form").style.display = "none";
+
+        // Hide try another way form
+        const tryAnotherWayForm = document.getElementById("kc-select-try-another-way-form");
+        if (tryAnotherWayForm) {
+            tryAnotherWayForm.style.display = "none";
         }
-        function setupPasskey() {
-            $("#setupType").val("passkey");
-            $("#setupAuth").submit();
-        }
-        function setupPassword() {
-            $("#setupType").val("password");
-            $("#setupAuth").submit();
-        }
+
     </script>
 
 </@layout.registrationLayout>
