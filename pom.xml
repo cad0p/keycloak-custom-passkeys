@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.inventage.keycloak.custom</groupId>
@@ -23,9 +23,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
         <keycloak.dir>./target/keycloak</keycloak.dir>
-        <keycloak.target.dir>../server/${keycloak.dir}/</keycloak.target.dir> <!-- used in config & extension modules -->
-        <keycloak.providers.dir>../../server/${keycloak.dir}/providers</keycloak.providers.dir> <!-- used in extension modules -->
-        <keycloak.themes.dir>../server/${keycloak.dir}/themes</keycloak.themes.dir> <!-- used in themes module -->
+        <keycloak.target.dir>../server/${keycloak.dir}/</keycloak.target.dir> <!-- used in config &
+        extension modules -->
+        <keycloak.providers.dir>../../server/${keycloak.dir}/providers</keycloak.providers.dir> <!--
+        used in extension modules -->
+        <keycloak.themes.dir>../server/${keycloak.dir}/themes</keycloak.themes.dir> <!-- used in
+        themes module -->
         <docker.registry>docker-registry.inventage.com:10094/</docker.registry>
         <docker.image.name>com.inventage.keycloak.custom.container</docker.image.name>
         <docker.contextDir>${project.build.outputDirectory}</docker.contextDir>
@@ -33,7 +36,8 @@
         <docker.imagePropertyConfiguration>override</docker.imagePropertyConfiguration>
         <!-- versions -->
         <keycloak.version>26.0.7</keycloak.version> <!-- update also keycloak-config-cli.version -->
-        <keycloak-config-cli.version>26.0.5</keycloak-config-cli.version> <!-- from https://github.com/adorsys/keycloak-config-cli/releases -->
+        <keycloak-config-cli.version>26.0.5</keycloak-config-cli.version> <!-- from
+        https://github.com/adorsys/keycloak-config-cli/releases -->
         <auto-service.version>1.0.1</auto-service.version>
         <!-- https://github.com/dasniko/testcontainers-keycloak/releases -->
         <testcontainers-keycloak.version>3.4.0</testcontainers-keycloak.version>
@@ -161,7 +165,8 @@
                         <excludedGroups>integration</excludedGroups>
                         <systemPropertyVariables>
                             <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-                            <!--suppress UnresolvedMavenProperty -->
+                            <!--suppress
+                            UnresolvedMavenProperty -->
                             <maven.home>${maven.home}</maven.home>
                         </systemPropertyVariables>
                     </configuration>
@@ -178,7 +183,8 @@
                         <includes>
                             <include>**/*</include>
                         </includes>
-                        <groups>integration</groups> <!-- for tests annotated with `@Tag("integration")` -->
+                        <groups>integration</groups> <!-- for tests annotated with
+                        `@Tag("integration")` -->
                     </configuration>
                     <executions>
                         <execution>
@@ -282,6 +288,12 @@
                             <username>${env.GITHUB_ACTOR}</username>
                             <password>${env.GITHUB_TOKEN}</password>
                         </uploadRepoStable>
+                        <helmExtraRepos>
+                            <helmRepo>
+                                <name>codecentric</name>
+                                <url>https://codecentric.github.io/helm-charts</url>
+                            </helmRepo>
+                        </helmExtraRepos>
                     </configuration>
                     <executions>
                         <execution>
@@ -323,7 +335,7 @@
                                         (https://maven.apache.org/plugins/maven-invoker-plugin/)!
                                     </message>
                                 </bannedPlugins>
-                                <banDuplicatePomDependencyVersions/>
+                                <banDuplicatePomDependencyVersions />
                                 <requirePluginVersions>
                                     <message>Best Practice is to always define plugin versions!</message>
                                     <banLatest>true</banLatest>
@@ -372,8 +384,10 @@
                                                     @see https://github.com/moby/buildkit/blob/master/docs/buildkitd.toml.md
                                                     @see https://github.com/docker/buildx/blob/master/docs/guides/custom-registry-config.md
                                                 -->
-                                                <!--suppress UnresolvedMavenProperty -->
-                                                <configFile>${maven.multiModuleProjectDirectory}/.build-tools/buildkit/buildkitd.toml</configFile>
+                                                <!--suppress
+                                                UnresolvedMavenProperty -->
+                                                <configFile>
+                                                    ${maven.multiModuleProjectDirectory}/.build-tools/buildkit/buildkitd.toml</configFile>
                                                 <platforms>
                                                     <platform>linux/arm64</platform>
                                                     <platform>linux/amd64</platform>
