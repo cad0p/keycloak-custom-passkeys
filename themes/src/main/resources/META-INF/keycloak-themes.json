@@ -1,0 +1,9 @@
+{
+  "themes": [{
+    "name" : "inventage",
+    "types": [ "login", "common" ]
+  }, {
+    "name" : "inventage.v2",
+    "types": [ "account", "common" ]
+  }]
+}
