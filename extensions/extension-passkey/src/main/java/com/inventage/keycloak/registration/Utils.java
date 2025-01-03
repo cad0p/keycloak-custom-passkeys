@@ -22,20 +22,21 @@ class Utils {
 
     private static final String KEYS_USERDATA = "keyUserdata";
     private static final String KEYS_USERDATA_SEPARATOR = ";";
-    private static final List<String> DEFAULT_KEYS_USERDATA = List.of(UserModel.FIRST_NAME, UserModel.LAST_NAME, UserModel.EMAIL, UserModel.USERNAME);
+    private static final List<String> DEFAULT_KEYS_USERDATA = List.of(UserModel.FIRST_NAME, UserModel.LAST_NAME,
+            UserModel.EMAIL, UserModel.USERNAME);
 
-
-    private Utils(){}
+    private Utils() {
+    }
 
     /**
      * We store the user data entered in the registration form in the session notes.
      * This information will later be retrieved to create a user account.
      */
-    static void storeUserDataInAuthSessionNotes(FormContext context){
+    static void storeUserDataInAuthSessionNotes(FormContext context) {
         MultivaluedMap<String, String> formData = context.getHttpRequest().getDecodedFormParameters();
         AuthenticationSessionModel sessionModel = context.getAuthenticationSession();
 
-        //We store each key
+        // We store each key
         String keys = Utils.serializeUserdataKeys(formData.keySet());
         sessionModel.setAuthNote(Utils.KEYS_USERDATA, keys);
 
@@ -45,16 +46,18 @@ class Utils {
     }
 
     /**
-     * We retrieve the user data stored in the session notes and create a new user in this realm.
+     * We retrieve the user data stored in the session notes and create a new user
+     * in this realm.
      */
     static void createUserFromAuthSessionNotes(AuthenticationFlowContext context) {
         MultivaluedMap<String, String> formData = context.getHttpRequest().getDecodedFormParameters();
         MultivaluedMap<String, String> userAttributes = new MultivaluedHashMap<>();
 
         AuthenticationSessionModel authenticationSession = context.getAuthenticationSession();
-        List<String> keysUserdata = Utils.deserializeUserdataKeys(authenticationSession.getAuthNote(Utils.KEYS_USERDATA));
+        List<String> keysUserdata = Utils
+                .deserializeUserdataKeys(authenticationSession.getAuthNote(Utils.KEYS_USERDATA));
 
-        //keys userdata is transmitted from the UserCreationPasskeyAction class.
+        // keys userdata is transmitted from the UserCreationPasskeyAction class.
         if (keysUserdata != null) {
             for (String key : keysUserdata) {
                 String value = authenticationSession.getAuthNote(key);
@@ -90,7 +93,7 @@ class Utils {
         KeycloakSession session = context.getSession();
 
         UserProfileProvider profileProvider = session.getProvider(UserProfileProvider.class);
-        UserProfile profile = profileProvider.create(UserProfileContext.REGISTRATION_USER_CREATION, userAttributes);
+        UserProfile profile = profileProvider.create(UserProfileContext.REGISTRATION, userAttributes);
         UserModel user = profile.create();
 
         user.setEnabled(true);

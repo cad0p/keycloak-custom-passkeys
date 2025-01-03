@@ -18,3 +18,16 @@ Please see the tutorials [building a custom Keycloak container image](https://ke
 
 [Keycloak]: https://keycloak.org
 
+Installation
+---
+
+```sh
+# set up
+./mvnw clean package
+# run postgres
+docker compose -f ./docker-compose/postgres/docker-compose.yml up -d
+# run keycloak
+./server/run-keycloak.sh
+# in a different tab, set up keycloak
+./server/run-keycloak-setup.sh
+```
