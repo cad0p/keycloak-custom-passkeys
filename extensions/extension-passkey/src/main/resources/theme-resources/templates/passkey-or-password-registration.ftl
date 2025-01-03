@@ -21,7 +21,6 @@
                    name="login" id="kc-login" type="submit" value="Setup passkey" onclick="setupPasskey()"/>
         </div>
     </#if>
-    <script type="text/javascript" src="${url.resourcesCommonPath}/node_modules/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript">
     
         function setupPasskey() {
