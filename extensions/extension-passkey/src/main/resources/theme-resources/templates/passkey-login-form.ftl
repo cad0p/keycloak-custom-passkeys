@@ -14,6 +14,17 @@
             </form>
             <div id="kc-form-wrapper">
                 <#if realm.password>
+                    <div id="showPasskeyOption">
+                        <div id="kc-form-buttons" class="${properties.kcFormGroupClass!}">
+                            <input tabindex="4"
+                                   class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}"
+                                   name="login" id="kc-login" type="submit" value="Sign in with Passkey"
+                                   onclick="webAuthnAuthenticate()"/>
+                        </div>
+                    </div>
+                    <div style="border-bottom: 1px solid;  text-align: center;  height: 10px; margin-bottom: 10px; margin-top: 10px;">
+                        <span style="background: #fff; padding: 0 5px;">Other Sign in Options</span>
+                    </div>
                     <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="${url.loginAction}"
                           method="post">
                         <#if !usernameHidden??>
@@ -60,17 +71,6 @@
                                    name="login" id="kc-login" type="submit" value="Continue"/>
                         </div>
                     </form>
-                    <div id="showPasskeyOption">
-                        <div style="border-bottom: 1px solid;  text-align: center;  height: 10px; margin-bottom: 10px; margin-top: 10px;">
-                            <span style="background: #fff; padding: 0 5px;">Other Sign in Options</span>
-                        </div>
-                        <div id="kc-form-buttons" class="${properties.kcFormGroupClass!}">
-                            <input tabindex="4"
-                                   class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}"
-                                   name="login" id="kc-login" type="submit" value="Sign in with Passkey"
-                                   onclick="webAuthnAuthenticate()"/>
-                        </div>
-                    </div>
                 </#if>
             </div>
         </div>
