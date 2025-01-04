@@ -12,16 +12,16 @@ import org.keycloak.provider.ProviderConfigProperty;
 import java.util.List;
 
 @AutoService(org.keycloak.authentication.AuthenticatorFactory.class)
-public class PasskeyOrPasswordRegistrationAuthenticatorFactory implements AuthenticatorFactory {
+public class PasskeyRegistrationAuthenticatorFactory implements AuthenticatorFactory {
 
-    public static final String PROVIDER_ID = "passkey-or-password-registration";
+    public static final String PROVIDER_ID = "passkey-registration";
     private static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = {
             AuthenticationExecutionModel.Requirement.REQUIRED,
             AuthenticationExecutionModel.Requirement.ALTERNATIVE,
             AuthenticationExecutionModel.Requirement.DISABLED
     };
 
-    private static final PasskeyOrPasswordRegistrationAuthenticator SINGLETON = new PasskeyOrPasswordRegistrationAuthenticator();
+    private static final PasskeyRegistrationAuthenticator SINGLETON = new PasskeyRegistrationAuthenticator();
 
     @Override
     public Authenticator create(KeycloakSession session) {
@@ -32,6 +32,7 @@ public class PasskeyOrPasswordRegistrationAuthenticatorFactory implements Authen
     public AuthenticationExecutionModel.Requirement[] getRequirementChoices() {
         return REQUIREMENT_CHOICES;
     }
+
     @Override
     public String getId() {
         return PROVIDER_ID;
@@ -52,7 +53,6 @@ public class PasskeyOrPasswordRegistrationAuthenticatorFactory implements Authen
         return false;
     }
 
-
     @Override
     public boolean isUserSetupAllowed() {
         return false;
@@ -67,7 +67,6 @@ public class PasskeyOrPasswordRegistrationAuthenticatorFactory implements Authen
     public List<ProviderConfigProperty> getConfigProperties() {
         return null;
     }
-
 
     @Override
     public void init(Config.Scope config) {

@@ -9,6 +9,7 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.provider.ProviderConfigProperty;
 
+import java.util.Collections;
 import java.util.List;
 
 @AutoService(AuthenticatorFactory.class)
@@ -22,6 +23,7 @@ public class PasswordRegistrationAuthenticatorFactory implements AuthenticatorFa
     };
 
     private static final PasswordRegistrationAuthenticator SINGLETON = new PasswordRegistrationAuthenticator();
+
     @Override
     public Authenticator create(KeycloakSession session) {
         return SINGLETON;
@@ -36,9 +38,6 @@ public class PasswordRegistrationAuthenticatorFactory implements AuthenticatorFa
     public String getId() {
         return PROVIDER_ID;
     }
-
-
-
 
     @Override
     public String getDisplayType() {
@@ -55,7 +54,6 @@ public class PasswordRegistrationAuthenticatorFactory implements AuthenticatorFa
         return false;
     }
 
-
     @Override
     public boolean isUserSetupAllowed() {
         return false;
@@ -68,9 +66,13 @@ public class PasswordRegistrationAuthenticatorFactory implements AuthenticatorFa
 
     @Override
     public List<ProviderConfigProperty> getConfigProperties() {
-        return null;
+        ProviderConfigProperty name = new ProviderConfigProperty();
+        name.setType(ProviderConfigProperty.STRING_TYPE);
+        name.setName("displayName");
+        name.setLabel("Allowed IP Address which does not require an OTP");
+        name.setHelpText("Only accepts one IP address");
+        return Collections.singletonList(name);
     }
-
 
     @Override
     public void init(Config.Scope config) {
@@ -86,6 +88,5 @@ public class PasswordRegistrationAuthenticatorFactory implements AuthenticatorFa
     public void close() {
 
     }
-
 
 }

@@ -8,7 +8,7 @@
   "eventsEnabled": true,
   "eventsExpiration": 259200,
   "browserFlow": "browser-passkey",
-  "registrationFlow": "registration-passkey",
+  "registrationFlow": "start-registration",
   "requiredActions": [
     {
       "alias": "webauthn-register-passwordless",
@@ -170,7 +170,7 @@
       "builtIn": false,
       "authenticationExecutions": [
         {
-          "authenticator": "passkey-or-password-registration",
+          "authenticator": "passkey-registration",
           "authenticatorFlow": false,
           "requirement": "ALTERNATIVE",
           "priority": 0,
@@ -188,8 +188,8 @@
       ]
     },
     {
-      "alias": "registration-passkey",
-      "description": "Passkey or Password Registration",
+      "alias": "start-registration",
+      "description": "Registration",
       "providerId": "basic-flow",
       "topLevel": true,
       "builtIn": false,

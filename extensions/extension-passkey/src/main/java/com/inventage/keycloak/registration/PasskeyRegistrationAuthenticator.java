@@ -12,9 +12,9 @@ import org.keycloak.sessions.AuthenticationSessionModel;
 
 /**
  * This class contains all the logic when the
- * passkey-or-password-registration.ftl file is rendered or interacted with.
- * passkey-or-password-registration.ftl displays a page with two buttons labeled
- * with setup with passkey and setup with password.
+ * passkey-registration.ftl file is rendered or interacted with.
+ * passkey-registration.ftl displays a page with a button labeled
+ * with setup with passkey.
  * <p>
  * This authenticator is supposed to be used in the registration flow.
  * Purpose: Determine if the user wants to set up a passkey or password for
@@ -25,16 +25,16 @@ import org.keycloak.sessions.AuthenticationSessionModel;
  * as we rely on data submitted in the session authentication notes in
  * UserCreationPasskeyAction.
  */
-public class PasskeyOrPasswordRegistrationAuthenticator implements Authenticator {
+public class PasskeyRegistrationAuthenticator implements Authenticator {
 
     public static final String SETUP_TYPE = "setupType";
     public static final String SETUP_PASSKEY = "passkey";
-    private static final String TPL_CODE = "passkey-or-password-registration.ftl";
+    private static final String TPL_CODE = "passkey-registration.ftl";
 
     @Override
     public void authenticate(AuthenticationFlowContext context) {
         LoginFormsProvider form = context.form();
-        // Render passkey-or-password-registration.ftl form to user
+        // Render passkey-registration.ftl form to user
         context.challenge(form.createForm(TPL_CODE));
     }
 
