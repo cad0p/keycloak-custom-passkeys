@@ -22,10 +22,10 @@
             </div>
         </form>
 
-        <#--  <script type="module">
+        <script type="module">
             import { registerByWebAuthn } from "${url.resourcesPath}/js/webauthnRegister.js";
             const registerButton = document.getElementById('registerWebAuthn');
-            registerButton.addEventListener("click", function() {
+            <#--  registerButton.addEventListener("click", function() {
                 const input = {
                     challenge : '${challenge}',
                     userid : '${userid}',
@@ -44,8 +44,8 @@
                     errmsg : "${msg("webauthn-unsupported-browser-text")?no_esc}"
                 };
                 registerByWebAuthn(input);
-            });
-        </script>  -->
+            });  -->
+        </script>
 
         <input type="submit"
                class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}"
