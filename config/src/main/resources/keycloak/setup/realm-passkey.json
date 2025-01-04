@@ -149,14 +149,12 @@
           "authenticatorFlow": false,
           "requirement": "ALTERNATIVE",
           "priority": 0,
-          "autheticatorFlow": false,
           "userSetupAllowed": false
         },
         {
           "authenticatorFlow": true,
           "requirement": "ALTERNATIVE",
           "priority": 1,
-          "autheticatorFlow": true,
           "flowAlias": "Login Options",
           "userSetupAllowed": false
         }
@@ -164,7 +162,7 @@
     },
     {
       "alias": "Registration Options",
-      "description": "",
+      "description": "Choose how to register",
       "providerId": "basic-flow",
       "topLevel": false,
       "builtIn": false,
@@ -174,7 +172,6 @@
           "authenticatorFlow": false,
           "requirement": "ALTERNATIVE",
           "priority": 0,
-          "autheticatorFlow": false,
           "userSetupAllowed": false
         },
         {
@@ -182,7 +179,6 @@
           "authenticatorFlow": false,
           "requirement": "ALTERNATIVE",
           "priority": 1,
-          "autheticatorFlow": false,
           "userSetupAllowed": false
         }
       ]
@@ -199,7 +195,6 @@
           "authenticatorFlow": true,
           "requirement": "REQUIRED",
           "priority": 0,
-          "autheticatorFlow": true,
           "flowAlias": "Registration Form",
           "userSetupAllowed": false
         },
@@ -207,7 +202,6 @@
           "authenticatorFlow": true,
           "requirement": "REQUIRED",
           "priority": 2,
-          "autheticatorFlow": true,
           "flowAlias": "Registration Options",
           "userSetupAllowed": false
         }
@@ -225,7 +219,6 @@
           "authenticatorFlow": false,
           "requirement": "REQUIRED",
           "priority": 0,
-          "autheticatorFlow": false,
           "userSetupAllowed": false
         }
       ]
@@ -242,7 +235,6 @@
           "authenticatorFlow": false,
           "requirement": "ALTERNATIVE",
           "priority": 0,
-          "autheticatorFlow": false,
           "userSetupAllowed": false
         },
         {
@@ -250,7 +242,6 @@
           "authenticatorFlow": false,
           "requirement": "ALTERNATIVE",
           "priority": 1,
-          "autheticatorFlow": false,
           "userSetupAllowed": false
         }
       ]

@@ -7,6 +7,7 @@ import org.keycloak.authentication.AuthenticatorFactory;
 import org.keycloak.models.AuthenticationExecutionModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
+import org.keycloak.models.credential.WebAuthnCredentialModel;
 import org.keycloak.provider.ProviderConfigProperty;
 
 import java.util.List;
@@ -40,12 +41,12 @@ public class PasskeyRegistrationAuthenticatorFactory implements AuthenticatorFac
 
     @Override
     public String getDisplayType() {
-        return "Passkey or Password Registration";
+        return "Register with Passkey (Recommended)";
     }
 
     @Override
     public String getReferenceCategory() {
-        return null;
+        return WebAuthnCredentialModel.TYPE_PASSWORDLESS;
     }
 
     @Override
@@ -60,7 +61,7 @@ public class PasskeyRegistrationAuthenticatorFactory implements AuthenticatorFac
 
     @Override
     public String getHelpText() {
-        return "Passkey Tutorial: Should not be used in combination with built-in Authenticators/Forms. Displays two button labeled with: setup with passkey and setup with password.";
+        return "Register using your device's biometric sensor or security key (recommended)";
     }
 
     @Override

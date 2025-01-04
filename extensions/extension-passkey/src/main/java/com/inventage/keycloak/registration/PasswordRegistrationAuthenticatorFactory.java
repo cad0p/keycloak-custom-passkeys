@@ -7,9 +7,9 @@ import org.keycloak.authentication.AuthenticatorFactory;
 import org.keycloak.models.AuthenticationExecutionModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
+import org.keycloak.models.credential.PasswordCredentialModel;
 import org.keycloak.provider.ProviderConfigProperty;
 
-import java.util.Collections;
 import java.util.List;
 
 @AutoService(AuthenticatorFactory.class)
@@ -41,12 +41,12 @@ public class PasswordRegistrationAuthenticatorFactory implements AuthenticatorFa
 
     @Override
     public String getDisplayType() {
-        return "Password Registration form";
+        return "Register with Password";
     }
 
     @Override
     public String getReferenceCategory() {
-        return null;
+        return PasswordCredentialModel.TYPE;
     }
 
     @Override
@@ -61,17 +61,12 @@ public class PasswordRegistrationAuthenticatorFactory implements AuthenticatorFa
 
     @Override
     public String getHelpText() {
-        return "Passkey Tutorial: Should not be used in combination with built-in Authenticators/Forms. Form for setting up a password for a new user account.";
+        return "Create a new password for your account";
     }
 
     @Override
     public List<ProviderConfigProperty> getConfigProperties() {
-        ProviderConfigProperty name = new ProviderConfigProperty();
-        name.setType(ProviderConfigProperty.STRING_TYPE);
-        name.setName("displayName");
-        name.setLabel("Allowed IP Address which does not require an OTP");
-        name.setHelpText("Only accepts one IP address");
-        return Collections.singletonList(name);
+        return null;
     }
 
     @Override
