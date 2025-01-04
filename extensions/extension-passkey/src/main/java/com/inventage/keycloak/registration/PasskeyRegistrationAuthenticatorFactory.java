@@ -1,19 +1,29 @@
 package com.inventage.keycloak.registration;
 
 import com.google.auto.service.AutoService;
+import com.webauthn4j.anchor.KeyStoreTrustAnchorsProvider;
+import com.webauthn4j.anchor.TrustAnchorsResolverImpl;
+import com.webauthn4j.validator.attestation.trustworthiness.certpath.CertPathTrustworthinessValidator;
+import com.webauthn4j.validator.attestation.trustworthiness.certpath.NullCertPathTrustworthinessValidator;
+import com.webauthn4j.validator.attestation.trustworthiness.certpath.TrustAnchorCertPathTrustworthinessValidator;
+
 import org.keycloak.Config;
 import org.keycloak.authentication.Authenticator;
 import org.keycloak.authentication.AuthenticatorFactory;
+import org.keycloak.common.Profile;
 import org.keycloak.models.AuthenticationExecutionModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.models.credential.WebAuthnCredentialModel;
+import org.keycloak.provider.EnvironmentDependentProviderFactory;
 import org.keycloak.provider.ProviderConfigProperty;
+import org.keycloak.truststore.TruststoreProvider;
 
 import java.util.List;
 
 @AutoService(org.keycloak.authentication.AuthenticatorFactory.class)
-public class PasskeyRegistrationAuthenticatorFactory implements AuthenticatorFactory {
+public class PasskeyRegistrationAuthenticatorFactory
+        implements AuthenticatorFactory, EnvironmentDependentProviderFactory {
 
     public static final String PROVIDER_ID = "passkey-registration";
     private static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = {
@@ -22,11 +32,26 @@ public class PasskeyRegistrationAuthenticatorFactory implements AuthenticatorFac
             AuthenticationExecutionModel.Requirement.DISABLED
     };
 
-    private static final PasskeyRegistrationAuthenticator SINGLETON = new PasskeyRegistrationAuthenticator();
-
     @Override
     public Authenticator create(KeycloakSession session) {
-        return SINGLETON;
+        PasskeyRegistrationAuthenticator webAuthnRegister = null;
+        TruststoreProvider truststoreProvider = session.getProvider(TruststoreProvider.class);
+        if (truststoreProvider == null || truststoreProvider.getTruststore() == null) {
+            webAuthnRegister = createProvider(session, new NullCertPathTrustworthinessValidator());
+        } else {
+            KeyStoreTrustAnchorsProvider trustAnchorsProvider = new KeyStoreTrustAnchorsProvider();
+            trustAnchorsProvider.setKeyStore(truststoreProvider.getTruststore());
+            TrustAnchorsResolverImpl resolverImpl = new TrustAnchorsResolverImpl(trustAnchorsProvider);
+            TrustAnchorCertPathTrustworthinessValidator trustValidator = new TrustAnchorCertPathTrustworthinessValidator(
+                    resolverImpl);
+            webAuthnRegister = createProvider(session, trustValidator);
+        }
+        return webAuthnRegister;
+    }
+
+    protected PasskeyRegistrationAuthenticator createProvider(KeycloakSession session,
+            CertPathTrustworthinessValidator trustValidator) {
+        return new PasskeyRegistrationAuthenticator(session, trustValidator);
     }
 
     @Override
@@ -79,6 +104,11 @@ public class PasskeyRegistrationAuthenticatorFactory implements AuthenticatorFac
 
     @Override
     public void close() {
+    }
+
+    @Override
+    public boolean isSupported(Config.Scope config) {
+        return Profile.isFeatureEnabled(Profile.Feature.WEB_AUTHN);
     }
 
 }

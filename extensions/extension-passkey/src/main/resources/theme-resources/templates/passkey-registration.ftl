@@ -8,9 +8,6 @@
         <span class="${properties.kcWebAuthnKeyIcon!}"></span>
         ${kcSanitize(msg("webauthn-registration-title"))?no_esc}
     <#elseif section = "form">
-        <form id="setupAuth" action="${url.loginAction}" method="post">
-            <input type="hidden" id="setupType" name="setupType"/>
-        </form>
         <form id="register" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
             <div class="${properties.kcFormGroupClass!}">
                 <input type="hidden" id="clientDataJSON" name="clientDataJSON"/>
@@ -25,7 +22,7 @@
         <script type="module">
             import { registerByWebAuthn } from "${url.resourcesPath}/js/webauthnRegister.js";
             const registerButton = document.getElementById('registerWebAuthn');
-            registerButton.addEventListener("click", async function() {
+            registerButton.addEventListener("click", function() {
                 const input = {
                     challenge : '${challenge}',
                     userid : '${userid}',
@@ -43,8 +40,7 @@
                     initLabelPrompt : "${msg("webauthn-registration-init-label-prompt")?no_esc}",
                     errmsg : "${msg("webauthn-unsupported-browser-text")?no_esc}"
                 };
-                await registerByWebAuthn(input);
-                passkeySuccess();
+                registerByWebAuthn(input);
             });
         </script>
 
@@ -63,24 +59,5 @@
         </#if>
 
     </#if>
-        <script type="text/javascript">
-    
-        function passkeySuccess() {
-            document.getElementById("setupType").value = "passkey";
-            document.getElementById("setupAuth").submit();
-        }
-
-        function passwordFallback() {
-            document.getElementById("setupType").value = "password";
-            document.getElementById("setupAuth").submit();
-        }
-
-        // Check WebAuthn support
-        // If not redirect to password setup
-        if (!window.PublicKeyCredential) {
-            passwordFallback()
-        }
-
-    </script>
 
 </@layout.registrationLayout>
