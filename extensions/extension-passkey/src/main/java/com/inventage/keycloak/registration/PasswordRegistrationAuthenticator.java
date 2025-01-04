@@ -19,15 +19,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class contains all the logic when the password-registration.ftl file is rendered or interacted with.
- * password-registration.ftl displays a page with two input fields. One for the password, the other for password confirmation.
+ * This class contains all the logic when the password-registration.ftl file is
+ * rendered or interacted with.
+ * password-registration.ftl displays a page with two input fields. One for the
+ * password, the other for password confirmation.
  * <p>
  * This authenticator is supposed to be used in the registration flow.
  * Purpose: Create a user account upon successfully entering the password form.
  * <p>
- * IMPORTANT: This authenticator can only be used when {@link RegistrationUserCreationNoAccount} is used in the registration form, as we rely on data submitted
- * in the session authentication notes. It is also required that the authenticator defined in {@link PasskeyOrPasswordRegistrationAuthenticator}
- * precedes this authenticator in the registration flow, as we check which setup type has been chosen.
+ * IMPORTANT: This authenticator can only be used when
+ * {@link RegistrationUserCreationNoAccount} is used in the registration form,
+ * as we rely on data submitted
+ * in the session authentication notes. It is also required that the
+ * authenticator defined in {@link PasskeyOrPasswordRegistrationAuthenticator}
+ * precedes this authenticator in the registration flow, as we check which setup
+ * type has been chosen.
  **/
 public class PasswordRegistrationAuthenticator implements Authenticator {
 
@@ -47,11 +53,15 @@ public class PasswordRegistrationAuthenticator implements Authenticator {
         // Check password validity
         if (Validation.isBlank(formData.getFirst(RegistrationPage.FIELD_PASSWORD))) {
             errors.add(new FormMessage(RegistrationPage.FIELD_PASSWORD, Messages.MISSING_PASSWORD));
-        } else if (!formData.getFirst(RegistrationPage.FIELD_PASSWORD).equals(formData.getFirst(RegistrationPage.FIELD_PASSWORD_CONFIRM))) {
+        } else if (!formData.getFirst(RegistrationPage.FIELD_PASSWORD)
+                .equals(formData.getFirst(RegistrationPage.FIELD_PASSWORD_CONFIRM))) {
             errors.add(new FormMessage(RegistrationPage.FIELD_PASSWORD_CONFIRM, Messages.INVALID_PASSWORD_CONFIRM));
         }
         if (formData.getFirst(RegistrationPage.FIELD_PASSWORD) != null) {
-            PolicyError err = context.getSession().getProvider(PasswordPolicyManagerProvider.class).validate(context.getRealm().isRegistrationEmailAsUsername() ? formData.getFirst(RegistrationPage.FIELD_EMAIL) : formData.getFirst(RegistrationPage.FIELD_USERNAME), formData.getFirst(RegistrationPage.FIELD_PASSWORD));
+            PolicyError err = context.getSession().getProvider(PasswordPolicyManagerProvider.class).validate(
+                    context.getRealm().isRegistrationEmailAsUsername() ? formData.getFirst(RegistrationPage.FIELD_EMAIL)
+                            : formData.getFirst(RegistrationPage.FIELD_USERNAME),
+                    formData.getFirst(RegistrationPage.FIELD_PASSWORD));
             if (err != null)
                 errors.add(new FormMessage(RegistrationPage.FIELD_PASSWORD, err.getMessage(), err.getParameters()));
         }
@@ -67,8 +77,8 @@ public class PasswordRegistrationAuthenticator implements Authenticator {
         }
     }
 
-    private void createUserAccount(AuthenticationFlowContext context, String password){
-        Utils.createUserFromAuthSessionNotes(context);
+    private void createUserAccount(AuthenticationFlowContext context, String password) {
+        Utils.createOrUpdateUserFromAuthSessionNotes(context);
         UserModel user = context.getUser();
         user.credentialManager().updateCredential(UserCredentialModel.password(password, false));
     }

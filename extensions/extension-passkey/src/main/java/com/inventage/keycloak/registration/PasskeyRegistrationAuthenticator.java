@@ -103,12 +103,14 @@ public class PasskeyRegistrationAuthenticator implements Authenticator, Credenti
     @Override
     public void authenticate(AuthenticationFlowContext context) {
 
+        // Create a minimal user to get the user id
+        UserModel user = Utils.createMinimalUser(context);
         MultivaluedMap<String, String> userAttributes = Utils.getUserDataFromAuthSessionNotes(context);
         // Use standard UTF-8 charset to get bytes from string.
         // Otherwise the platform's default charset is used and it might cause problems later when
         // decoded on different system.
         String username = userAttributes.getFirst(UserModel.USERNAME);
-        String userId = Base64Url.encode(username.getBytes(StandardCharsets.UTF_8));
+        String userId = Base64Url.encode(user.getId().getBytes(StandardCharsets.UTF_8));
         Challenge challenge = new DefaultChallenge();
         String challengeValue = Base64Url.encode(challenge.getValue());
         context.getAuthenticationSession().setAuthNote(WebAuthnConstants.AUTH_CHALLENGE_NOTE, challengeValue);
@@ -168,6 +170,8 @@ public class PasskeyRegistrationAuthenticator implements Authenticator, Credenti
             authenticate(context);
             return;
         }
+
+        String userId = params.getFirst(WebAuthnConstants.USER_ID);
 
         final EventType eventType = EventType.UPDATE_CREDENTIAL;
         context.getEvent()
@@ -239,7 +243,7 @@ public class PasskeyRegistrationAuthenticator implements Authenticator, Credenti
             WebAuthnCredentialModel newCredentialModel = webAuthnCredProvider
                     .getCredentialModelFromCredentialInput(credential, label);
 
-            Utils.createUserFromAuthSessionNotes(context);
+            Utils.createOrUpdateUserFromAuthSessionNotes(context);
             webAuthnCredProvider.createCredential(context.getRealm(), context.getUser(), newCredentialModel);
 
             String aaguid = newCredentialModel.getWebAuthnCredentialData().getAaguid();

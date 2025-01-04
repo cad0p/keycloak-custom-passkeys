@@ -64,9 +64,15 @@ class Utils {
 
     /**
      * We retrieve the user data stored in the session notes and create a new user
-     * in this realm.
+     * in this realm, or update if it exists in context.
      */
-    static void createUserFromAuthSessionNotes(AuthenticationFlowContext context) {
+    static void createOrUpdateUserFromAuthSessionNotes(AuthenticationFlowContext context) {
+        createOrUpdateUserFromAuthSessionNotes(context, null);
+    }
+
+    static void createOrUpdateUserFromAuthSessionNotes(
+            AuthenticationFlowContext context,
+            String userId) {
         MultivaluedMap<String, String> formData = context.getHttpRequest().getDecodedFormParameters();
         MultivaluedMap<String, String> userAttributes = new MultivaluedHashMap<>();
 
@@ -103,19 +109,36 @@ class Utils {
                 .detail(Details.REGISTER_METHOD, "form")
                 .detail(Details.EMAIL, email);
 
-        context.getEvent().detail(Details.USERNAME, username)
-                .detail(Details.REGISTER_METHOD, "form")
-                .detail(Details.EMAIL, email);
-
         KeycloakSession session = context.getSession();
-
         UserProfileProvider profileProvider = session.getProvider(UserProfileProvider.class);
-        UserProfile profile = profileProvider.create(UserProfileContext.REGISTRATION, userAttributes);
-        UserModel user = profile.create();
+        UserModel user;
 
-        user.setEnabled(true);
+        if (userId != null) {
+            // // Update existing user - ensure all required fields are present
+            // if (!userAttributes.containsKey(UserModel.EMAIL)) {
+            //     String email = formData.getFirst(UserModel.EMAIL);
+            //     userAttributes.add(UserModel.EMAIL, email);
+            // }
+            // if (!userAttributes.containsKey(UserModel.FIRST_NAME)) {
+            //     String firstName = formData.getFirst(UserModel.FIRST_NAME);
+            //     userAttributes.add(UserModel.FIRST_NAME, firstName);
+            // }
+            // if (!userAttributes.containsKey(UserModel.LAST_NAME)) {
+            //     String lastName = formData.getFirst(UserModel.LAST_NAME);
+            //     userAttributes.add(UserModel.LAST_NAME, lastName);
+            // }
 
-        context.setUser(user);
+            user = session.users().getUserById(context.getRealm(), userId);
+            user.setEnabled(true);
+            UserProfile profile = profileProvider.create(UserProfileContext.UPDATE_PROFILE, userAttributes, user);
+            profile.update(false);
+        } else {
+            // Create new user
+            UserProfile profile = profileProvider.create(UserProfileContext.REGISTRATION, userAttributes);
+            user = profile.create();
+            user.setEnabled(true);
+            context.setUser(user);
+        }
 
         context.getAuthenticationSession().setClientNote(OIDCLoginProtocol.LOGIN_HINT_PARAM, username);
 
@@ -129,6 +152,36 @@ class Utils {
         if (authType != null) {
             context.getEvent().detail(Details.AUTH_TYPE, authType);
         }
+    }
+
+    /**
+     * Creates a minimal user with temporary attributes to allow passkey
+     * registration.
+     * The user will be updated with complete information later.
+     */
+    static UserModel createMinimalUser(AuthenticationFlowContext context) {
+        KeycloakSession session = context.getSession();
+        UserProfileProvider profileProvider = session.getProvider(UserProfileProvider.class);
+
+        // Create minimal attributes required by Keycloak
+        MultivaluedMap<String, String> minimalAttributes = new MultivaluedHashMap<>();
+        String tempId = java.util.UUID.randomUUID().toString();
+        String tempUsername = "temp_" + tempId;
+
+        // Add all required attributes with temporary values
+        minimalAttributes.add(UserModel.USERNAME, tempUsername);
+        minimalAttributes.add(UserModel.FIRST_NAME, "Temporary");
+        minimalAttributes.add(UserModel.LAST_NAME, "User");
+        minimalAttributes.add(UserModel.EMAIL, tempUsername + "@temporary.com");
+
+        // Create user profile and user
+        UserProfile profile = profileProvider.create(UserProfileContext.REGISTRATION, minimalAttributes);
+        UserModel user = profile.create();
+        user.setEnabled(false); // Keep disabled until full registration
+
+        // // Set user in context and return
+        // context.setUser(user);
+        return user;
     }
 
     private static String serializeUserdataKeys(Collection<String> keys, String separator) {

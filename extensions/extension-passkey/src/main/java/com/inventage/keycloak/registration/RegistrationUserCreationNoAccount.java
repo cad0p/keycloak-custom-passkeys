@@ -102,10 +102,7 @@ public class RegistrationUserCreationNoAccount extends RegistrationUserCreation 
     public void success(FormContext context) {
         // Following successful filling of the form, we store the required user
         // information in the authentication session notes. This stored information is
-        // then retrieved at a later time to create the user account.//Following
-        // successful filling of the form, we store the required user information in the
-        // authentication session notes. This stored information is then retrieved at a
-        // later time to create the user account.
+        // then retrieved at a later time to create the user account.
         Utils.storeUserDataInAuthSessionNotes(context);
     }
 
