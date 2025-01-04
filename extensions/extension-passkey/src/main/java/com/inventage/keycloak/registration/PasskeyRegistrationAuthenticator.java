@@ -239,6 +239,7 @@ public class PasskeyRegistrationAuthenticator implements Authenticator, Credenti
             WebAuthnCredentialModel newCredentialModel = webAuthnCredProvider
                     .getCredentialModelFromCredentialInput(credential, label);
 
+            Utils.createUserFromAuthSessionNotes(context);
             webAuthnCredProvider.createCredential(context.getRealm(), context.getUser(), newCredentialModel);
 
             String aaguid = newCredentialModel.getWebAuthnCredentialData().getAaguid();
@@ -246,8 +247,6 @@ public class PasskeyRegistrationAuthenticator implements Authenticator, Credenti
                     "WebAuthn credential registration success for user {0}. credentialType = {1}, publicKeyCredentialId = {2}, publicKeyCredentialLabel = {3}, publicKeyCredentialAAGUID = {4}",
                     context.getUser().getUsername(), getCredentialType(), publicKeyCredentialId, label, aaguid);
             webAuthnCredProvider.dumpCredentialModel(newCredentialModel, credential);
-
-            Utils.createUserFromAuthSessionNotes(context);
 
             context.getEvent()
                     .detail(WebAuthnConstants.PUBKEY_CRED_ID_ATTR, publicKeyCredentialId)
@@ -384,8 +383,9 @@ public class PasskeyRegistrationAuthenticator implements Authenticator, Credenti
                         .setError(errorCase, errorMessage)
                         .setAttribute(WEB_AUTHN_TITLE_ATTR, Messages.WEBAUTHN_REGISTER_TITLE)
                         .createWebAuthnErrorPage();
-                context.challenge(errorResponse);
-                break;
+                throw new WebAuthnException(errorCase + ": " + errorMessage);
+            // context.challenge(errorResponse);
+            // break;
             default:
                 // NOP
         }
