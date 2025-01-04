@@ -21,7 +21,7 @@ import org.keycloak.truststore.TruststoreProvider;
 
 import java.util.List;
 
-@AutoService(org.keycloak.authentication.AuthenticatorFactory.class)
+@AutoService(AuthenticatorFactory.class)
 public class PasskeyRegistrationAuthenticatorFactory
         implements AuthenticatorFactory, EnvironmentDependentProviderFactory {
 

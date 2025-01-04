@@ -41,6 +41,7 @@ import org.keycloak.services.messages.Messages;
 import org.keycloak.sessions.AuthenticationSessionModel;
 import org.keycloak.utils.StringUtil;
 
+import com.inventage.keycloak.credential.PasskeyRegistrationCredentialProviderFactory;
 import com.webauthn4j.WebAuthnRegistrationManager;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.AuthenticatorTransport;
@@ -451,7 +452,7 @@ public class PasskeyRegistrationAuthenticator implements Authenticator, Credenti
     }
 
     protected String getCredentialProviderId() {
-        return PasskeyRegistrationAuthenticatorFactory.PROVIDER_ID;
+        return PasskeyRegistrationCredentialProviderFactory.PROVIDER_ID;
     }
 
 }
