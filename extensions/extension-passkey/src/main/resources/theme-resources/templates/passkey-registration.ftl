@@ -25,7 +25,7 @@
         <script type="module">
             import { registerByWebAuthn } from "${url.resourcesPath}/js/webauthnRegister.js";
             const registerButton = document.getElementById('registerWebAuthn');
-            <#--  registerButton.addEventListener("click", function() {
+            registerButton.addEventListener("click", async function() {
                 const input = {
                     challenge : '${challenge}',
                     userid : '${userid}',
@@ -43,8 +43,9 @@
                     initLabelPrompt : "${msg("webauthn-registration-init-label-prompt")?no_esc}",
                     errmsg : "${msg("webauthn-unsupported-browser-text")?no_esc}"
                 };
-                registerByWebAuthn(input);
-            });  -->
+                await registerByWebAuthn(input);
+                passkeySuccess();
+            });
         </script>
 
         <input type="submit"
@@ -64,12 +65,12 @@
     </#if>
         <script type="text/javascript">
     
-        function setupPasskey() {
+        function passkeySuccess() {
             document.getElementById("setupType").value = "passkey";
             document.getElementById("setupAuth").submit();
         }
 
-        function setupPassword() {
+        function passwordFallback() {
             document.getElementById("setupType").value = "password";
             document.getElementById("setupAuth").submit();
         }
@@ -77,7 +78,7 @@
         // Check WebAuthn support
         // If not redirect to password setup
         if (!window.PublicKeyCredential) {
-            setupPassword()
+            passwordFallback()
         }
 
     </script>

@@ -45,6 +45,23 @@ class Utils {
         });
     }
 
+    static MultivaluedMap<String, String> getUserDataFromAuthSessionNotes(AuthenticationFlowContext context) {
+        AuthenticationSessionModel sessionModel = context.getAuthenticationSession();
+        List<String> keysUserdata = Utils
+                .deserializeUserdataKeys(sessionModel.getAuthNote(Utils.KEYS_USERDATA));
+
+        MultivaluedMap<String, String> userAttributes = new MultivaluedHashMap<>();
+        if (keysUserdata != null) {
+            for (String key : keysUserdata) {
+                String value = sessionModel.getAuthNote(key);
+                if (value != null) {
+                    userAttributes.add(key, value);
+                }
+            }
+        }
+        return userAttributes;
+    }
+
     /**
      * We retrieve the user data stored in the session notes and create a new user
      * in this realm.
