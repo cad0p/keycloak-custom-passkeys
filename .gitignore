@@ -26,3 +26,6 @@ release.properties
 Chart.lock
 helm/src/generated/**/*.tgz
 /config/src/main/resources/keycloak/setup/realm-ignored-*.json
+
+# debug junk
+debug.log
