@@ -36,3 +36,5 @@ docker compose -f ./docker-compose/postgres/docker-compose.yml up -d
 # in a different tab, set up keycloak
 ./server/run-keycloak-setup.sh
 ```
+
+Then test it by going to the URL: <https://www.keycloak.org/app/#url=http://localhost:8080&realm=passkey&client=client_passkey>
