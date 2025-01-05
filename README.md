@@ -27,7 +27,10 @@ Installation
 # run postgres
 docker compose -f ./docker-compose/postgres/docker-compose.yml up -d
 # run keycloak
-./server/run-keycloak.sh
+./server/run-keycloak.sh > debug.log
+```
+
+```sh
 # in a different tab, set up keycloak
 ./server/run-keycloak-setup.sh
 ```
