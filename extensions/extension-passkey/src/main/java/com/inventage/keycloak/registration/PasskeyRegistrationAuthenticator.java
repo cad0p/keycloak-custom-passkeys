@@ -84,7 +84,7 @@ import com.webauthn4j.validator.attestation.trustworthiness.self.DefaultSelfAtte
 public class PasskeyRegistrationAuthenticator implements Authenticator, CredentialRegistrator {
 
     private static final String WEB_AUTHN_TITLE_ATTR = "webAuthnTitle";
-    private static final Logger logger = Logger.getLogger(WebAuthnRegister.class);
+    private static final Logger logger = Logger.getLogger(PasskeyRegistrationAuthenticator.class);
 
     private KeycloakSession session;
     private CertPathTrustworthinessValidator certPathtrustValidator;
@@ -170,8 +170,6 @@ public class PasskeyRegistrationAuthenticator implements Authenticator, Credenti
             authenticate(context);
             return;
         }
-
-        String userId = params.getFirst(WebAuthnConstants.USER_ID);
 
         final EventType eventType = EventType.UPDATE_CREDENTIAL;
         context.getEvent()

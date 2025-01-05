@@ -2,6 +2,9 @@ package com.inventage.keycloak.registration;
 
 import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.MultivaluedMap;
+
+import org.jboss.logging.Logger;
+import org.keycloak.WebAuthnConstants;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.FormContext;
 import org.keycloak.events.Details;
@@ -20,10 +23,12 @@ import java.util.List;
 
 class Utils {
 
+    private static final Logger logger = Logger.getLogger(Utils.class);
+
     private static final String KEYS_USERDATA = "keyUserdata";
     private static final String KEYS_USERDATA_SEPARATOR = ";";
     private static final List<String> DEFAULT_KEYS_USERDATA = List.of(UserModel.FIRST_NAME, UserModel.LAST_NAME,
-            UserModel.EMAIL, UserModel.USERNAME);
+            UserModel.EMAIL, UserModel.USERNAME, WebAuthnConstants.USER_ID);
 
     private Utils() {
     }
@@ -35,6 +40,11 @@ class Utils {
     static void storeUserDataInAuthSessionNotes(FormContext context) {
         MultivaluedMap<String, String> formData = context.getHttpRequest().getDecodedFormParameters();
         AuthenticationSessionModel sessionModel = context.getAuthenticationSession();
+
+        // Add WebAuthnConstants.USER_ID if not present
+        if (!formData.containsKey(WebAuthnConstants.USER_ID)) {
+            formData.add(WebAuthnConstants.USER_ID, "tempUUID");
+        }
 
         // We store each key
         String keys = Utils.serializeUserdataKeys(formData.keySet());
@@ -58,6 +68,14 @@ class Utils {
                     userAttributes.add(key, value);
                 }
             }
+        } // In case that another custom FormAction than UserCreationPasskey is used.
+        else {
+            for (String key : DEFAULT_KEYS_USERDATA) {
+                String value = sessionModel.getAuthNote(key);
+                if (value != null) {
+                    userAttributes.add(key, value);
+                }
+            }
         }
         return userAttributes;
     }
@@ -67,36 +85,10 @@ class Utils {
      * in this realm, or update if it exists in context.
      */
     static void createOrUpdateUserFromAuthSessionNotes(AuthenticationFlowContext context) {
-        createOrUpdateUserFromAuthSessionNotes(context, null);
-    }
-
-    static void createOrUpdateUserFromAuthSessionNotes(
-            AuthenticationFlowContext context,
-            String userId) {
         MultivaluedMap<String, String> formData = context.getHttpRequest().getDecodedFormParameters();
-        MultivaluedMap<String, String> userAttributes = new MultivaluedHashMap<>();
+        MultivaluedMap<String, String> userAttributes = getUserDataFromAuthSessionNotes(context);
 
-        AuthenticationSessionModel authenticationSession = context.getAuthenticationSession();
-        List<String> keysUserdata = Utils
-                .deserializeUserdataKeys(authenticationSession.getAuthNote(Utils.KEYS_USERDATA));
-
-        // keys userdata is transmitted from the UserCreationPasskeyAction class.
-        if (keysUserdata != null) {
-            for (String key : keysUserdata) {
-                String value = authenticationSession.getAuthNote(key);
-                if (value != null) {
-                    userAttributes.add(key, value);
-                }
-            }
-        } // In case that another custom FormAction than UserCreationPasskey is used.
-        else {
-            for (String key : DEFAULT_KEYS_USERDATA) {
-                String value = authenticationSession.getAuthNote(key);
-                if (value != null) {
-                    userAttributes.add(key, value);
-                }
-            }
-        }
+        String userId = userAttributes.remove(WebAuthnConstants.USER_ID).getFirst();
 
         String email = formData.getFirst(UserModel.EMAIL);
         String username = formData.getFirst(UserModel.USERNAME);
@@ -127,10 +119,10 @@ class Utils {
             //     String lastName = formData.getFirst(UserModel.LAST_NAME);
             //     userAttributes.add(UserModel.LAST_NAME, lastName);
             // }
-
+            logger.debug("Updating existing user with id " + userId);
             user = session.users().getUserById(context.getRealm(), userId);
             user.setEnabled(true);
-            UserProfile profile = profileProvider.create(UserProfileContext.UPDATE_PROFILE, userAttributes, user);
+            UserProfile profile = profileProvider.create(UserProfileContext.USER_API, userAttributes, user);
             profile.update(false);
         } else {
             // Create new user
@@ -179,8 +171,9 @@ class Utils {
         UserModel user = profile.create();
         user.setEnabled(false); // Keep disabled until full registration
 
-        // // Set user in context and return
-        // context.setUser(user);
+        // Store user ID in session notes
+        context.getAuthenticationSession().setAuthNote(WebAuthnConstants.USER_ID, user.getId());
+
         return user;
     }
 
