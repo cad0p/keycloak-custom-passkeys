@@ -103,34 +103,23 @@ class Utils {
 
         KeycloakSession session = context.getSession();
         UserProfileProvider profileProvider = session.getProvider(UserProfileProvider.class);
-        UserModel user;
 
+        UserModel user;
         if (userId != null) {
-            // // Update existing user - ensure all required fields are present
-            // if (!userAttributes.containsKey(UserModel.EMAIL)) {
-            //     String email = formData.getFirst(UserModel.EMAIL);
-            //     userAttributes.add(UserModel.EMAIL, email);
-            // }
-            // if (!userAttributes.containsKey(UserModel.FIRST_NAME)) {
-            //     String firstName = formData.getFirst(UserModel.FIRST_NAME);
-            //     userAttributes.add(UserModel.FIRST_NAME, firstName);
-            // }
-            // if (!userAttributes.containsKey(UserModel.LAST_NAME)) {
-            //     String lastName = formData.getFirst(UserModel.LAST_NAME);
-            //     userAttributes.add(UserModel.LAST_NAME, lastName);
-            // }
+            // Update existing user
+            userAttributes.remove(UserModel.USERNAME);
             logger.debug("Updating existing user with id " + userId);
             user = session.users().getUserById(context.getRealm(), userId);
             user.setEnabled(true);
-            UserProfile profile = profileProvider.create(UserProfileContext.USER_API, userAttributes, user);
+            UserProfile profile = profileProvider.create(UserProfileContext.UPDATE_PROFILE, userAttributes, user);
             profile.update(false);
         } else {
             // Create new user
             UserProfile profile = profileProvider.create(UserProfileContext.REGISTRATION, userAttributes);
             user = profile.create();
             user.setEnabled(true);
-            context.setUser(user);
         }
+        context.setUser(user);
 
         context.getAuthenticationSession().setClientNote(OIDCLoginProtocol.LOGIN_HINT_PARAM, username);
 
