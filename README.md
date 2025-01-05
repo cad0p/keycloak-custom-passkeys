@@ -38,3 +38,5 @@ docker compose -f ./docker-compose/postgres/docker-compose.yml up -d
 ```
 
 Then test it by going to the URL: <https://www.keycloak.org/app/#url=http://localhost:8080&realm=passkey&client=client_passkey>
+
+Or <http://localhost:8080/realms/passkey/account>
