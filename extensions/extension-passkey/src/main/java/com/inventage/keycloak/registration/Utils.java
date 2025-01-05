@@ -107,7 +107,6 @@ class Utils {
         UserModel user;
         if (userId != null) {
             // Update existing user
-            userAttributes.remove(UserModel.USERNAME);
             logger.debug("Updating existing user with id " + userId);
             user = session.users().getUserById(context.getRealm(), userId);
             user.setEnabled(true);

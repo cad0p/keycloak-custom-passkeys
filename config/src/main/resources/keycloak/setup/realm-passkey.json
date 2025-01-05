@@ -9,17 +9,8 @@
   "eventsExpiration": 259200,
   "browserFlow": "browser-passkey",
   "registrationFlow": "start-registration",
-  "requiredActions": [
-    {
-      "alias": "webauthn-register-passwordless",
-      "name": "Webauthn Register Passwordless",
-      "providerId": "webauthn-register-passwordless",
-      "enabled": true,
-      "defaultAction": false,
-      "priority": 10,
-      "config": {}
-    }
-  ],
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": true,
   "webAuthnPolicyPasswordlessAuthenticatorAttachment": "not specified",
   "webAuthnPolicyPasswordlessRequireResidentKey": "Yes",
   "enabledEventTypes": [
