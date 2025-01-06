@@ -37,7 +37,6 @@
                     createTimeout : ${createTimeout},
                     excludeCredentialIds : '${excludeCredentialIds}',
                     initLabel : "${msg("webauthn-registration-init-label")?no_esc}",
-                    initLabelPrompt : "${msg("webauthn-registration-init-label-prompt")?no_esc}",
                     errmsg : "${msg("webauthn-unsupported-browser-text")?no_esc}"
                 };
                 registerByWebAuthn(input);

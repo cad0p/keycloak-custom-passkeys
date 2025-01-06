@@ -125,7 +125,10 @@ function returnSuccess(result, initLabel, initLabelPrompt) {
         console.log("Your browser is not able to recognize supported transport media for the authenticator.");
     }
 
-    let labelResult = window.prompt(initLabelPrompt, initLabel);
+    let labelResult = null;
+    if (initLabelPrompt) {
+        labelResult = window.prompt(initLabelPrompt, initLabel);
+    }
     if (labelResult === null) {
         labelResult = initLabel;
     }
