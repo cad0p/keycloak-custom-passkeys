@@ -29,6 +29,8 @@ class Utils {
     private static final String KEYS_USERDATA_SEPARATOR = ";";
     private static final List<String> DEFAULT_KEYS_USERDATA = List.of(UserModel.FIRST_NAME, UserModel.LAST_NAME,
             UserModel.EMAIL, UserModel.USERNAME, WebAuthnConstants.USER_ID);
+    /** Dummy User ID before the user has been created. Saved in Auth Notes. */
+    private static final String DUMMY_USER_ID = "dummyUUID";
 
     private Utils() {
     }
@@ -43,7 +45,7 @@ class Utils {
 
         // Add WebAuthnConstants.USER_ID if not present
         if (!formData.containsKey(WebAuthnConstants.USER_ID)) {
-            formData.add(WebAuthnConstants.USER_ID, "tempUUID");
+            formData.add(WebAuthnConstants.USER_ID, DUMMY_USER_ID);
         }
 
         // We store each key
@@ -142,6 +144,12 @@ class Utils {
     static UserModel createMinimalUser(AuthenticationFlowContext context) {
         KeycloakSession session = context.getSession();
         UserProfileProvider profileProvider = session.getProvider(UserProfileProvider.class);
+        AuthenticationSessionModel sessionModel = context.getAuthenticationSession();
+        String existingUserId = sessionModel.getAuthNote(WebAuthnConstants.USER_ID);
+        if (!existingUserId.equals(DUMMY_USER_ID)) {
+            // Miminal user already exists
+            return session.users().getUserById(context.getRealm(), existingUserId);
+        }
 
         // Create minimal attributes required by Keycloak
         MultivaluedMap<String, String> minimalAttributes = new MultivaluedHashMap<>();
@@ -160,7 +168,7 @@ class Utils {
         user.setEnabled(false); // Keep disabled until full registration
 
         // Store user ID in session notes
-        context.getAuthenticationSession().setAuthNote(WebAuthnConstants.USER_ID, user.getId());
+        sessionModel.setAuthNote(WebAuthnConstants.USER_ID, user.getId());
 
         return user;
     }
