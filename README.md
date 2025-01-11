@@ -40,3 +40,12 @@ docker compose -f ./docker-compose/postgres/docker-compose.yml up -d
 Then test it by going to the URL: <https://www.keycloak.org/app/#url=http://localhost:8080&realm=passkey&client=passkey>
 
 Or <http://localhost:8080/realms/passkey/account>
+
+Build Image
+---
+
+In order to use this Authorization Server in other places, building the image is necessary.
+
+```sh
+./mvnw clean install -DmultiArchBuild
+```
