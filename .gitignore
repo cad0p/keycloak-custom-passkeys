@@ -29,3 +29,6 @@ helm/src/generated/**/*.tgz
 
 # debug junk
 debug.log
+
+# macOS junk
+.DS_Store
