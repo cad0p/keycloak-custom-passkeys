@@ -116,40 +116,18 @@ export const SigningIn = () => {
         style={maxWidth}
       >
         {editingCredentialId === credential.id ? (
-          <Split>
-            <SplitItem isFilled>
-              <TextInput
-                value={newLabel}
-                onChange={(_event, value) => setNewLabel(value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleUpdateLabel(credential.id, newLabel);
-                  } else if (e.key === 'Escape') {
-                    setEditingCredentialId(undefined);
-                  }
-                }}
-                autoFocus  // Add autofocus for better UX
-              />
-            </SplitItem>
-            <SplitItem>
-              <Button
-                variant="plain"
-                onClick={() => handleUpdateLabel(credential.id, newLabel)}
-                aria-label="Confirm"
-                data-testrole="confirm-edit"
-              >
-                <CheckIcon />
-              </Button>
-              <Button
-                variant="plain"
-                onClick={() => setEditingCredentialId(undefined)}
-                aria-label="Cancel"
-                data-testrole="cancel-edit"
-              >
-                <TimesIcon />
-              </Button>
-            </SplitItem>
-          </Split>
+          <TextInput
+            value={newLabel}
+            onChange={(_event, value) => setNewLabel(value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleUpdateLabel(credential.id, newLabel);
+              } else if (e.key === 'Escape') {
+                setEditingCredentialId(undefined);
+              }
+            }}
+            autoFocus
+          />
         ) : (
           t(credential.userLabel) || t(credential.type as TFuncKey)
         )}
@@ -258,32 +236,51 @@ export const SigningIn = () => {
                               aria-label={t("updateCredAriaLabel")}
                               aria-labelledby={`cred-${meta.credential.id}`}
                             >
-                              <Button
-                                variant="plain"
-                                onClick={() => {
-                                  setEditingCredentialId(meta.credential.id);
-                                  setNewLabel(meta.credential.userLabel || '');
-                                }}
-                                data-testrole="edit-label"
-                              >
-                                <PencilAltIcon />
-                              </Button>
+                              {editingCredentialId === meta.credential.id ? (
+                                <Button
+                                  variant="plain"
+                                  onClick={() => handleUpdateLabel(meta.credential.id, newLabel)}
+                                  aria-label="Confirm"
+                                  data-testrole="confirm-edit"
+                                >
+                                  <CheckIcon />
+                                </Button>
+                              ) : (
+                                <Button
+                                  variant="plain"
+                                  onClick={() => {
+                                    setEditingCredentialId(meta.credential.id);
+                                    setNewLabel(meta.credential.userLabel || '');
+                                  }}
+                                  data-testrole="edit-label"
+                                >
+                                  <PencilAltIcon />
+                                </Button>
+                              )}
+                              {editingCredentialId === meta.credential.id && (
+                                <Button
+                                  variant="plain"
+                                  onClick={() => setEditingCredentialId(undefined)}
+                                  aria-label="Cancel"
+                                  data-testrole="cancel-edit"
+                                >
+                                  <TimesIcon />
+                                </Button>
+                              )}
                               {container.removeable && (
                                 <Button
                                   variant="danger"
                                   data-testrole="remove"
                                   onClick={() => {
                                     login({
-                                      action:
-                                        "delete_credential:" +
-                                        meta.credential.id,
+                                      action: "delete_credential:" + meta.credential.id,
                                     });
                                   }}
                                 >
                                   {t("delete")}
                                 </Button>
                               )}
-                              {container.updateAction && (
+                              {container.updateAction && !editingCredentialId && (
                                 <Button
                                   variant="secondary"
                                   onClick={() => {
