@@ -90,33 +90,33 @@ export const SigningIn = () => {
       const creds = await getCredentials({ signal, context });
       console.log('Raw credentials:', creds);
       
-      // Merge duplicate entries instead of filtering them out
-      const mergedCreds = creds.reduce((acc, current) => {
+      // Instead of merging, we should identify the registration capability
+      // and management entries separately
+      const processedCreds = creds.reduce((acc, current) => {
         const existingIndex = acc.findIndex(item => 
           item.category === current.category && 
-          item.type === current.type &&
-          item.userCredentialMetadatas.some(meta => 
-            current.userCredentialMetadatas.some(currentMeta => 
-              currentMeta.credential.id === meta.credential.id
-            )
-          )
+          item.type === current.type
         );
 
         if (existingIndex === -1) {
           acc.push(current);
         } else {
-          // Merge properties, preferring non-null values
+          // If we have a createAction, this is the registration capability entry
+          // If we have userCredentialMetadatas, this is the management entry
+          // We want to combine them preserving both aspects
+          const existing = acc[existingIndex];
           acc[existingIndex] = {
-            ...acc[existingIndex],
+            ...existing,
             ...current,
-            createAction: acc[existingIndex].createAction || current.createAction,
-            updateAction: acc[existingIndex].updateAction || current.updateAction,
+            createAction: current.createAction || existing.createAction,
+            userCredentialMetadatas: existing.userCredentialMetadatas.length ? 
+              existing.userCredentialMetadatas : current.userCredentialMetadatas
           };
         }
         return acc;
       }, [] as CredentialContainer[]);
 
-      return mergedCreds;
+      return processedCreds;
     },
     setCredentials,
     [],
