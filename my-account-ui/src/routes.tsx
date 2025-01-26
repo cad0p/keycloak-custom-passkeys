@@ -8,7 +8,6 @@ import {
   LinkedAccounts,
   PersonalInfo,
   Resources,
-  SigningIn,
 } from "@keycloak/keycloak-account-ui";
 import { MyPage } from "./MyPage";
 import SigningInPasskeys from "./SigningInPasskeys";
@@ -26,11 +25,6 @@ export const LinkedAccountsRoute: RouteObject = {
 
 export const SigningInRoute: RouteObject = {
   path: "account-security/signingIn",
-  element: <SigningIn />,
-};
-
-export const SigningInPasskeysRoute: RouteObject = {
-  path: "account-security/signingInPasskeys",
   element: <SigningInPasskeys />,
 };
 
@@ -69,7 +63,6 @@ export const RootRoute: RouteObject = {
     DeviceActivityRoute,
     LinkedAccountsRoute,
     SigningInRoute,
-    SigningInPasskeysRoute,
     ApplicationsRoute,
     GroupsRoute,
     ResourcesRoute,
