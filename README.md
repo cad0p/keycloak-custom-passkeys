@@ -47,3 +47,9 @@ In order to use this Authorization Server in other places, building the image is
 ```sh
 ./mvnw clean install -DmultiArchBuild
 ```
+
+Documentation
+---
+
+- [Server Development Guide (Old)](https://wjw465150.gitbooks.io/keycloak-documentation/content/server_development/index.html)
+- [Server Development Guide (New)](https://www.keycloak.org/docs/latest/server_development)
