@@ -18,8 +18,6 @@ Please see the tutorials [building a custom Keycloak container image](https://ke
 
 Server admin guide: <https://www.keycloak.org/docs/latest/server_admin>
 
-[Keycloak]: https://keycloak.org
-
 Installation
 ---
 
