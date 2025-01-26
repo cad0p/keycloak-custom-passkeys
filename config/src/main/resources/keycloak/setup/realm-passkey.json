@@ -126,7 +126,7 @@
     "VERIFY_PROFILE_ERROR"
   ],
   "loginTheme": "inventage",
-  "accountTheme": "inventage.v2",
+  "accountTheme": "my-account",
   "authenticationFlows": [
     {
       "alias": "browser-passkey",
