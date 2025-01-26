@@ -14,6 +14,7 @@
         <module>config</module>
         <module>extensions</module>
         <module>themes</module>
+        <module>my-account-ui</module>
         <module>container</module>
         <module>docker-compose</module>
         <module>helm</module>
