@@ -30,6 +30,7 @@ import { Page } from "@keycloak/keycloak-account-ui";
 import { TFuncKey } from "./i18n";
 import { formatDate } from "./utils/formatDate";
 import { usePromise } from "@keycloak/keycloak-account-ui";
+import React from "react";
 
 type MobileLinkProps = {
   title: string;
