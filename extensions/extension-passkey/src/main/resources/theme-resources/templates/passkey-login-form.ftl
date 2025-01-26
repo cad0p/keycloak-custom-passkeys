@@ -12,6 +12,11 @@
                 <input type="hidden" id="userHandle" name="userHandle"/>
                 <input type="hidden" id="error" name="error"/>
             </form>
+            <form id="authn_select" class="${properties.kcFormClass!}">
+                <#list authenticators.authenticators as authenticator>
+                    <input type="hidden" name="authn_use_chk" value="${authenticator.credentialId}"/>
+                </#list>
+            </form>
             <div id="kc-form-wrapper">
                 <#if realm.password>
                     <div id="showPasskeyOption">
