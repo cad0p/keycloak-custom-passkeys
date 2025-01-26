@@ -12,6 +12,7 @@ import {
 } from "@keycloak/keycloak-account-ui";
 import { MyPage } from "./MyPage";
 import SigningInPasskeys from "./SigningInPasskeys";
+import React from "react";
 
 export const DeviceActivityRoute: RouteObject = {
   path: "account-security/deviceActivity",

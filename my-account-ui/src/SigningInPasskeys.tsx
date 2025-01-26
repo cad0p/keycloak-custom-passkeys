@@ -16,7 +16,7 @@ import {
   Title,
   TextInput,
 } from "@patternfly/react-core";
-import { EllipsisVIcon, PencilAltIcon } from "@patternfly/react-icons";
+import { EllipsisVIcon, PencilAltIcon, CheckIcon, TimesIcon } from "@patternfly/react-icons";
 import { CSSProperties, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useEnvironment } from "@keycloak/keycloak-account-ui";
@@ -96,6 +96,8 @@ export const SigningIn = () => {
       throw new Error('Not implemented');
     } catch (error) {
       console.error('Failed to update label:', error);
+    } finally {
+      setEditingCredentialId(undefined); // Clear editing state regardless of success/failure
     }
   };
 
@@ -114,17 +116,40 @@ export const SigningIn = () => {
         style={maxWidth}
       >
         {editingCredentialId === credential.id ? (
-          <TextInput
-            value={newLabel}
-            onChange={(_event, value) => setNewLabel(value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleUpdateLabel(credential.id, newLabel);
-              } else if (e.key === 'Escape') {
-                setEditingCredentialId(undefined);
-              }
-            }}
-          />
+          <Split>
+            <SplitItem isFilled>
+              <TextInput
+                value={newLabel}
+                onChange={(_event, value) => setNewLabel(value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleUpdateLabel(credential.id, newLabel);
+                  } else if (e.key === 'Escape') {
+                    setEditingCredentialId(undefined);
+                  }
+                }}
+                autoFocus  // Add autofocus for better UX
+              />
+            </SplitItem>
+            <SplitItem>
+              <Button
+                variant="plain"
+                onClick={() => handleUpdateLabel(credential.id, newLabel)}
+                aria-label="Confirm"
+                data-testrole="confirm-edit"
+              >
+                <CheckIcon />
+              </Button>
+              <Button
+                variant="plain"
+                onClick={() => setEditingCredentialId(undefined)}
+                aria-label="Cancel"
+                data-testrole="cancel-edit"
+              >
+                <TimesIcon />
+              </Button>
+            </SplitItem>
+          </Split>
         ) : (
           t(credential.userLabel) || t(credential.type as TFuncKey)
         )}

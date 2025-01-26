@@ -10,6 +10,7 @@ import { PropsWithChildren, MouseEvent as ReactMouseEvent, useState } from "reac
 import { useTranslation } from "react-i18next";
 import { useHref, useLinkClickHandler } from "react-router-dom";
 import { routes } from "./routes";
+import React from "react";
 
 type NavLinkProps = NavItemProps & {
   path?: string;

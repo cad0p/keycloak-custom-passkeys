@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import { PageNav } from "./PageNav";
 import viteLogo from "/vite.svg";
+import React from "react";
 
 function App() {
   return (

@@ -9,6 +9,7 @@ import {
   usePromise,
 } from "@keycloak/keycloak-account-ui";
 import { ActionGroup, Button, Form, FormGroup, TextInput } from "@patternfly/react-core";
+import React from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
