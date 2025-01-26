@@ -29,12 +29,6 @@ export const i18n = createInstance({
       const messages = JSON.parse(data);
 
       const result: Record<string, string> = {};
-      
-      // Add client name translations
-      result['client_account-console'] = 'Account Console';
-      result['client_security-admin-console'] = 'Security Admin Console';
-      
-      // Parse other messages
       messages.forEach((v: KeyValue) => (result[v.key] = v.value));
       return result;
     },
