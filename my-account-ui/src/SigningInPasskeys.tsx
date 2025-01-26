@@ -86,7 +86,38 @@ export const SigningIn = () => {
   const [newLabel, setNewLabel] = useState<string>("");
 
   usePromise(
-    (signal) => getCredentials({ signal, context }),
+    async (signal) => {
+      const creds = await getCredentials({ signal, context });
+      console.log('Raw credentials:', creds);
+      
+      // Merge duplicate entries instead of filtering them out
+      const mergedCreds = creds.reduce((acc, current) => {
+        const existingIndex = acc.findIndex(item => 
+          item.category === current.category && 
+          item.type === current.type &&
+          item.userCredentialMetadatas.some(meta => 
+            current.userCredentialMetadatas.some(currentMeta => 
+              currentMeta.credential.id === meta.credential.id
+            )
+          )
+        );
+
+        if (existingIndex === -1) {
+          acc.push(current);
+        } else {
+          // Merge properties, preferring non-null values
+          acc[existingIndex] = {
+            ...acc[existingIndex],
+            ...current,
+            createAction: acc[existingIndex].createAction || current.createAction,
+            updateAction: acc[existingIndex].updateAction || current.updateAction,
+          };
+        }
+        return acc;
+      }, [] as CredentialContainer[]);
+
+      return mergedCreds;
+    },
     setCredentials,
     [],
   );
