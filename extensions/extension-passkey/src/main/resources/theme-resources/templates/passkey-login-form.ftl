@@ -20,6 +20,7 @@
                         </#list>
                     </form>
                 </#if>
+            </div>
             <div id="kc-form-wrapper">
                 <#if realm.password>
                     <div id="showPasskeyOption">
