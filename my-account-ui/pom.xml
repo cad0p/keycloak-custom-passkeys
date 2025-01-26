@@ -80,7 +80,7 @@
                 <executions>
                     <!-- keycloak themes -->
                     <execution>
-                        <id>copy-themes</id>
+                        <id>copy-maven-resources</id>
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -90,6 +90,24 @@
                             <resources>
                                 <resource>
                                     <directory>${project.basedir}/maven-resources/theme</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-dist</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${keycloak.target.dir}/themes/my-account/account/resources
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/dist</directory>
                                     <filtering>false</filtering>
                                 </resource>
                             </resources>
