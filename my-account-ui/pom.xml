@@ -4,11 +4,25 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <artifactId>parent</artifactId>
+        <groupId>com.inventage.keycloak.custom</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
     <groupId>org.keycloak</groupId>
-    <version>25.0.4</version>
     <artifactId>my-account-ui</artifactId>
     <name>My Account UI</name>
     <description>The user inferface to manage an account on the Keycloak server.</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.inventage.keycloak.custom</groupId>
+            <artifactId>server</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
 
     <properties>
         <node.version>v20.13.0</node.version>
@@ -59,6 +73,29 @@
                     <nodeVersion>${node.version}</nodeVersion>
                     <installDirectory>${project.basedir}</installDirectory>
                 </configuration>
+            </plugin>
+            <plugin>
+                <!-- substitute variables -->
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <!-- keycloak themes -->
+                    <execution>
+                        <id>copy-themes</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${keycloak.target.dir}/themes</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/maven-resources/theme</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
