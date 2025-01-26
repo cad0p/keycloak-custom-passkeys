@@ -39,6 +39,15 @@ Then test it by going to the URL: <https://www.keycloak.org/app/#url=http://loca
 
 Or <http://localhost:8080/realms/passkey/account>
 
+Development
+---
+
+After the initial setup, the server can be started with the following command:
+
+```sh
+./mvnw clean package && ./server/run-keycloak.sh > debug.log
+```
+
 Build Image
 ---
 
