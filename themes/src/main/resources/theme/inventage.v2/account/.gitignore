@@ -1,0 +1,7 @@
+# Do not commit, installed at compile time
+node_modules
+web_modules
+
+resources/content/inventage.v2/SigningInPasskeys.js
+resources/content/inventage.v2/SigningInPasskeys.js.map
+resources/public/app.css
