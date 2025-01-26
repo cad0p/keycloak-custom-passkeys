@@ -14,8 +14,9 @@ import {
   Split,
   SplitItem,
   Title,
+  TextInput,
 } from "@patternfly/react-core";
-import { EllipsisVIcon } from "@patternfly/react-icons";
+import { EllipsisVIcon, PencilAltIcon } from "@patternfly/react-icons";
 import { CSSProperties, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useEnvironment } from "@keycloak/keycloak-account-ui";
@@ -80,12 +81,22 @@ export const SigningIn = () => {
   const { login } = context.keycloak;
 
   const [credentials, setCredentials] = useState<CredentialContainer[]>();
+  const [editingCredentialId, setEditingCredentialId] = useState<string>();
+  const [newLabel, setNewLabel] = useState<string>("");
 
   usePromise(
     (signal) => getCredentials({ signal, context }),
     setCredentials,
     [],
   );
+
+  const handleUpdateLabel = async (credentialId: string, newLabel: string) => {
+    try {
+      throw new Error('Not implemented');
+    } catch (error) {
+      console.error('Failed to update label:', error);
+    }
+  };
 
   const credentialRowCells = (
     credMetadata: CredentialMetadataRepresentation,
@@ -101,7 +112,21 @@ export const SigningIn = () => {
         className="pf-v5-u-max-width"
         style={maxWidth}
       >
-        {t(credential.userLabel) || t(credential.type as TFuncKey)}
+        {editingCredentialId === credential.id ? (
+          <TextInput
+            value={newLabel}
+            onChange={(_event, value) => setNewLabel(value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleUpdateLabel(credential.id, newLabel);
+              } else if (e.key === 'Escape') {
+                setEditingCredentialId(undefined);
+              }
+            }}
+          />
+        ) : (
+          t(credential.userLabel) || t(credential.type as TFuncKey)
+        )}
       </DataListCell>,
     ];
 
@@ -207,6 +232,16 @@ export const SigningIn = () => {
                               aria-label={t("updateCredAriaLabel")}
                               aria-labelledby={`cred-${meta.credential.id}`}
                             >
+                              <Button
+                                variant="plain"
+                                onClick={() => {
+                                  setEditingCredentialId(meta.credential.id);
+                                  setNewLabel(meta.credential.userLabel || '');
+                                }}
+                                data-testrole="edit-label"
+                              >
+                                <PencilAltIcon />
+                              </Button>
                               {container.removeable && (
                                 <Button
                                   variant="danger"
