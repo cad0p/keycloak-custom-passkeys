@@ -41,7 +41,9 @@ import org.keycloak.services.messages.Messages;
 import org.keycloak.sessions.AuthenticationSessionModel;
 import org.keycloak.utils.StringUtil;
 
+import com.inventage.keycloak.credential.PasskeyRegistrationCredentialProvider;
 import com.inventage.keycloak.credential.PasskeyRegistrationCredentialProviderFactory;
+import com.inventage.keycloak.models.credential.PasskeyCredentialModel;
 import com.webauthn4j.WebAuthnRegistrationManager;
 import com.webauthn4j.converter.util.ObjectConverter;
 import com.webauthn4j.data.AuthenticatorTransport;
@@ -235,20 +237,20 @@ public class PasskeyRegistrationAuthenticator implements Authenticator, Credenti
             credential.setAttestationStatementFormat(registrationData.getAttestationObject().getFormat());
             credential.setTransports(registrationData.getTransports());
 
-            // Save new webAuthn credential
-            WebAuthnCredentialProvider webAuthnCredProvider = (WebAuthnCredentialProvider) this.session
+            // Save new Passkey credential
+            PasskeyRegistrationCredentialProvider passkeyRegCredProvider = (PasskeyRegistrationCredentialProvider) this.session
                     .getProvider(CredentialProvider.class, getCredentialProviderId());
-            WebAuthnCredentialModel newCredentialModel = webAuthnCredProvider
+            PasskeyCredentialModel newCredentialModel = passkeyRegCredProvider
                     .getCredentialModelFromCredentialInput(credential, label);
 
             Utils.createOrUpdateUserFromAuthSessionNotes(context);
-            webAuthnCredProvider.createCredential(context.getRealm(), context.getUser(), newCredentialModel);
+            passkeyRegCredProvider.createCredential(context.getRealm(), context.getUser(), newCredentialModel);
 
             String aaguid = newCredentialModel.getWebAuthnCredentialData().getAaguid();
             logger.debugv(
                     "WebAuthn credential registration success for user {0}. credentialType = {1}, publicKeyCredentialId = {2}, publicKeyCredentialLabel = {3}, publicKeyCredentialAAGUID = {4}",
                     context.getUser().getUsername(), getCredentialType(), publicKeyCredentialId, label, aaguid);
-            webAuthnCredProvider.dumpCredentialModel(newCredentialModel, credential);
+            passkeyRegCredProvider.dumpCredentialModel(newCredentialModel, credential);
 
             context.getEvent()
                     .detail(WebAuthnConstants.PUBKEY_CRED_ID_ATTR, publicKeyCredentialId)
@@ -351,7 +353,7 @@ public class PasskeyRegistrationAuthenticator implements Authenticator, Credenti
     }
 
     private String getCredentialType() {
-        return WebAuthnCredentialModel.TYPE_PASSWORDLESS;
+        return PasskeyCredentialModel.TYPE;
     }
 
     private void setErrorResponse(AuthenticationFlowContext context, final String errorCase, final String errorMessage,

@@ -2,7 +2,6 @@ package com.inventage.keycloak.credential;
 
 import org.keycloak.credential.CredentialProvider;
 import org.keycloak.credential.CredentialProviderFactory;
-import org.keycloak.credential.WebAuthnPasswordlessCredentialProvider;
 
 import com.google.auto.service.AutoService;
 
@@ -21,7 +20,7 @@ public class PasskeyRegistrationCredentialProviderFactory implements
     private ObjectConverter converter;
 
     @Override
-    public CredentialProvider create(KeycloakSession session) {
+    public PasskeyRegistrationCredentialProvider create(KeycloakSession session) {
         return new PasskeyRegistrationCredentialProvider(session, createOrGetObjectConverter());
     }
 
