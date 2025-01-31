@@ -31,7 +31,7 @@ import java.util.List;
  * {@link RegistrationUserCreationNoAccount} is used in the registration form,
  * as we rely on data submitted
  * in the session authentication notes. It is also required that the
- * authenticator defined in {@link PasskeyOrPasswordRegistrationAuthenticator}
+ * authenticator defined in {@link PasskeyRegistrationAuthenticator}
  * precedes this authenticator in the registration flow, as we check which setup
  * type has been chosen.
  **/
